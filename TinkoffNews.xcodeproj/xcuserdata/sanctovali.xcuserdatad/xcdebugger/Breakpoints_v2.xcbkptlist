@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TinkoffNews/NewsListViewController.swift"
-            timestampString = "579885854.49145"
+            timestampString = "579887983.597941"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "35"
-            endingLineNumber = "35"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
             landmarkName = "updateNewsData()"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TinkoffNews/CoreData/Model/NewsEntity.swift"
-            timestampString = "579885854.491532"
+            timestampString = "579887983.598346"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "22"
