@@ -137,6 +137,12 @@
                                     <constraint firstItem="7W1-hn-OwG" firstAttribute="leading" relation="lessThanOrEqual" secondItem="lp6-5p-OUm" secondAttribute="leading" constant="270" id="vDc-uz-RCG"/>
                                     <constraint firstItem="suA-BA-LdA" firstAttribute="leading" secondItem="lp6-5p-OUm" secondAttribute="leading" constant="5" id="zv1-1R-RjZ"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="lightTextColor"/>

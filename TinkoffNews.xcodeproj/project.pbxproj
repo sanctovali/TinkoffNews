@@ -76,17 +76,9 @@
 		454545BD22901DE60006132F /* TinkoffNews */ = {
 			isa = PBXGroup;
 			children = (
-				454545D422901E8D0006132F /* CoreData */,
-				454545BE22901DE60006132F /* AppDelegate.swift */,
-				454545C022901DE60006132F /* NewsListViewController.swift */,
-				454545E822904D250006132F /* DetailViewController.swift */,
-				454545C222901DE60006132F /* Main.storyboard */,
-				454545E522902EA40006132F /* NewsTableViewCell */,
+				454545F122906BA60006132F /* News */,
+				454545ED22906B540006132F /* App */,
 				454545D322901E560006132F /* Supporting Files */,
-				454545CA22901DE70006132F /* LaunchScreen.storyboard */,
-				454545C522901DE60006132F /* TinkoffNews.xcdatamodeld */,
-				454545E0229023E70006132F /* NetworkManager */,
-				454545E622903AF70006132F /* AlertsManager.swift */,
 			);
 			path = TinkoffNews;
 			sourceTree = "<group>";
@@ -115,6 +107,7 @@
 				454545D622901EC00006132F /* NewsEntity+CoreDataClass.swift */,
 				454545D722901EC00006132F /* NewsEntity+CoreDataProperties.swift */,
 				454545DA22901EED0006132F /* NewsEntity.swift */,
+				454545C522901DE60006132F /* TinkoffNews.xcdatamodeld */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -142,6 +135,69 @@
 				454545EB22904D990006132F /* WebKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		454545ED22906B540006132F /* App */ = {
+			isa = PBXGroup;
+			children = (
+				454545F022906B980006132F /* View */,
+				454545EF22906B7A0006132F /* Model */,
+				454545EE22906B5D0006132F /* Controller */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		454545EE22906B5D0006132F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				454545BE22901DE60006132F /* AppDelegate.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		454545EF22906B7A0006132F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				454545E622903AF70006132F /* AlertsManager.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		454545F022906B980006132F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				454545CA22901DE70006132F /* LaunchScreen.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		454545F122906BA60006132F /* News */ = {
+			isa = PBXGroup;
+			children = (
+				454545F322906BCB0006132F /* Controller */,
+				454545F222906BBB0006132F /* View */,
+				454545E0229023E70006132F /* NetworkManager */,
+				454545D422901E8D0006132F /* CoreData */,
+			);
+			path = News;
+			sourceTree = "<group>";
+		};
+		454545F222906BBB0006132F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				454545C222901DE60006132F /* Main.storyboard */,
+				454545E522902EA40006132F /* NewsTableViewCell */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		454545F322906BCB0006132F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				454545C022901DE60006132F /* NewsListViewController.swift */,
+				454545E822904D250006132F /* DetailViewController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

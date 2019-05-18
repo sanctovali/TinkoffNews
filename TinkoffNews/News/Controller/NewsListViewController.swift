@@ -38,7 +38,7 @@ class NewsListViewController: UIViewController {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		updateNewsData()
+		fetchData()
 	}
 	//MARK: Data handling
 	private func updateNewsData() {
@@ -57,11 +57,14 @@ class NewsListViewController: UIViewController {
 	private func handleData(data: [[String: AnyObject]]) {
 		news = data.compactMap { NewsEntity.createNew(from: $0) }
 		CoreDataStack.shared.saveContext()
+		fetchData()
 		
+	}
+	
+	private func fetchData() {
 		let context = CoreDataStack.shared.getContext()
 		let fetchRequest = NSFetchRequest<NewsEntity>(entityName: "NewsEntity")
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
-		
 		do {
 			let result = try context.fetch(fetchRequest)
 			news = result
@@ -113,6 +116,8 @@ extension NewsListViewController: UITableViewDelegate {
 			return
 		}
 		dvc.news = news[indexPath.row]
+		news[indexPath.row].viewsCounter += Int16(1)
+		fetchData()
 	}
 	///Pagination
 	func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

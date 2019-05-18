@@ -32,7 +32,7 @@ class DetailViewController: UIViewController {
 	}
 	
 	
-	func updateNewsData() {
+	private func updateNewsData() {
 		NetworkManager.shared.getNewsContent(urlSlug: news.urlSlug!) { (result) in
 			switch result {
 			case .succes(let data):
@@ -45,7 +45,8 @@ class DetailViewController: UIViewController {
 		}
 	}
 	
-	func handleData(data: String) {
+	private func handleData(data: String) {
+		
 		news.text = data
 		newsWebView.loadHTMLString(data, baseURL: nil)
 		titleLabel.text = news.title!
@@ -53,7 +54,7 @@ class DetailViewController: UIViewController {
 		activityIndicator.stopAnimating()
 	}
 	
-	func handleDate(_ date: String) -> String {
+	private func handleDate(_ date: String) -> String {
 		let dateFormatter = DateFormatter()
 		dateFormatter.locale = Locale.current
 		dateFormatter.timeZone = TimeZone.current
