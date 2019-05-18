@@ -27,7 +27,7 @@ class NewsListViewController: UIViewController {
 	}
 	
 	func updateNewsData() {
-		NetworkManager.shared.getnewsList(page: currentPage) { (result) in
+		NetworkManager.shared.getNewslist(page: currentPage) { (result) in
 			switch result {
 			case .succes(let data):
 				DispatchQueue.main.async { [weak self] in
@@ -50,7 +50,9 @@ class NewsListViewController: UIViewController {
 		do {
 			let result = try context.fetch(fetchRequest)
 			news = result
-			tableView.reloadData()
+			DispatchQueue.main.async {
+				self.tableView.reloadData()
+			}
 		} catch let error as NSError {
 			print("Could not fetch. \(error), \(error.userInfo)")
 			AlertsManager.shared.showWarning(title: error.localizedDescription)
@@ -77,7 +79,21 @@ extension NewsListViewController: UITableViewDataSource {
 }
 
 extension NewsListViewController: UITableViewDelegate {
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		performSegue(withIdentifier: "showDetail", sender: indexPath)
+		tableView.deselectRow(at: indexPath, animated: false)
+	}
 	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		guard segue.identifier == "showDetail" else { return }
+		let indexPath = sender as! IndexPath
+		//var newsToShow = news[indexPath.row]
+		guard let dvc = segue.destination as? DetailViewController else {
+			print("Internal error in \(#function): destination is unreacheble")
+			return
+		}
+		dvc.news = news[indexPath.row]
+	}
 }
 //MARK: Handle UI Setting Extension
 extension NewsListViewController {
@@ -86,9 +102,15 @@ extension NewsListViewController {
 		tableView.showsVerticalScrollIndicator = false
 		tableView.dataSource = self
 		tableView.delegate = self
-	//	tableView.estimatedRowHeight = 100
-		//tableView.rowHeight = UITableView.automaticDimension
-		//tableView.addSubview(self.refreshControl)
+		navigationBarSetup()
+	}
+	
+	func navigationBarSetup() {
+		self.navigationItem.title = "Tinkoff News"
+		self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+		self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 0.8479318443)
+		self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+		self.navigationController?.navigationBar.prefersLargeTitles = true
 	}
 	
 	private func setupRefreshControl() {
