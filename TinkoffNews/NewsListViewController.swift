@@ -14,7 +14,22 @@ class NewsListViewController: UIViewController {
 	@IBOutlet weak var tableView: UITableView!
 	
 	private var currentPage = 0
-	private var news = [NewsEntity]()
+	private var news = [NewsEntity]() {
+		didSet {
+			DispatchQueue.main.async {
+				self.tableView.reloadData()
+			}
+		}
+	}
+	
+	lazy var refreshControl: UIRefreshControl = {
+		let refreshControl = UIRefreshControl()
+		refreshControl.addTarget(self, action:
+			#selector(self.handleRefresh(_:)),
+								 for: .valueChanged)
+		refreshControl.tintColor = #colorLiteral(red: 0.936944797, green: 0.8678727418, blue: 0.217387357, alpha: 1)
+		return refreshControl
+	}()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -25,8 +40,8 @@ class NewsListViewController: UIViewController {
 		super.viewWillAppear(animated)
 		updateNewsData()
 	}
-	
-	func updateNewsData() {
+	//MARK: Data handling
+	private func updateNewsData() {
 		NetworkManager.shared.getNewslist(page: currentPage) { (result) in
 			switch result {
 			case .succes(let data):
@@ -39,7 +54,7 @@ class NewsListViewController: UIViewController {
 		}
 	}
 	
-	func handleData(data: [[String: AnyObject]]) {
+	private func handleData(data: [[String: AnyObject]]) {
 		news = data.compactMap { NewsEntity.createNew(from: $0) }
 		CoreDataStack.shared.saveContext()
 		
@@ -58,9 +73,15 @@ class NewsListViewController: UIViewController {
 			AlertsManager.shared.showWarning(title: error.localizedDescription)
 		}
 	}
+	
+	private func getMoreNews() {
+		currentPage += 1
+		updateNewsData()
+	}
+	
 }
 
-
+//MARK: UITableViewDataSource methods
 extension NewsListViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return news.count
@@ -77,7 +98,7 @@ extension NewsListViewController: UITableViewDataSource {
 		return cell
 	}
 }
-
+//MARK: UITableViewDelegate methods
 extension NewsListViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		performSegue(withIdentifier: "showDetail", sender: indexPath)
@@ -87,14 +108,20 @@ extension NewsListViewController: UITableViewDelegate {
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		guard segue.identifier == "showDetail" else { return }
 		let indexPath = sender as! IndexPath
-		//var newsToShow = news[indexPath.row]
 		guard let dvc = segue.destination as? DetailViewController else {
 			print("Internal error in \(#function): destination is unreacheble")
 			return
 		}
 		dvc.news = news[indexPath.row]
 	}
+	///Pagination
+	func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+		if indexPath.row == news.count - 1 {
+			getMoreNews()
+		}
+	}
 }
+
 //MARK: Handle UI Setting Extension
 extension NewsListViewController {
 	private func setupUI() {
@@ -102,26 +129,22 @@ extension NewsListViewController {
 		tableView.showsVerticalScrollIndicator = false
 		tableView.dataSource = self
 		tableView.delegate = self
+		tableView.addSubview(self.refreshControl)
 		navigationBarSetup()
 	}
 	
-	func navigationBarSetup() {
+	private func navigationBarSetup() {
 		self.navigationItem.title = "Tinkoff News"
 		self.navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
 		self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 0.8479318443)
 		self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
 		self.navigationController?.navigationBar.prefersLargeTitles = true
 	}
-	
-	private func setupRefreshControl() {
-		if let refresh = tableView.refreshControl {
-			refresh.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
-		}
-	}
+
 	
 	@objc
 	func handleRefresh(_ refreshControl: UIRefreshControl) {
-		//reloadNews()
+		updateNewsData()
 		self.tableView.reloadData()
 		refreshControl.endRefreshing()
 	}
