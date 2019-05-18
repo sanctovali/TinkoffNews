@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="titleCell" rowHeight="76" id="KGk-i7-Jjw" customClass="NewsTableViewCell" customModule="TinkoffNews" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="76"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="75.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tSl-hh-leX">
+                        <rect key="frame" x="5" y="5" width="281" height="65.5"/>
+                        <color key="backgroundColor" red="0.31007117029999998" green="0.31907799840000001" blue="0.32350215319999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <fontDescription key="fontDescription" name="AppleSDGothicNeo-Medium" family="Apple SD Gothic Neo" pointSize="15"/>
+                        <color key="textColor" red="0.97507399319999999" green="0.97509676219999997" blue="0.9750844836" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mn0-Tp-mMQ">
+                        <rect key="frame" x="291" y="26" width="24" height="24"/>
+                        <color key="backgroundColor" red="0.936944797" green="0.86787274179999996" blue="0.217387357" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="24" id="L5Z-Mi-OyI"/>
+                            <constraint firstAttribute="height" constant="24" id="ap1-Dh-efn"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <color key="backgroundColor" red="0.31007117029999998" green="0.31907799840000001" blue="0.32350215319999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="Mn0-Tp-mMQ" secondAttribute="trailing" constant="5" id="T3S-1H-mHJ"/>
+                    <constraint firstItem="Mn0-Tp-mMQ" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="WnK-tw-F8q"/>
+                    <constraint firstItem="tSl-hh-leX" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="5" id="Yik-XQ-IvR"/>
+                    <constraint firstItem="tSl-hh-leX" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="ZoI-VD-JqK"/>
+                    <constraint firstAttribute="bottom" secondItem="tSl-hh-leX" secondAttribute="bottom" constant="5" id="vYm-fb-cIA"/>
+                    <constraint firstItem="Mn0-Tp-mMQ" firstAttribute="leading" secondItem="tSl-hh-leX" secondAttribute="trailing" constant="5" id="xhi-E1-PXK"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="countLabel" destination="Mn0-Tp-mMQ" id="d4j-TX-sdI"/>
+                <outlet property="titleLabel" destination="tSl-hh-leX" id="DKe-6u-551"/>
+            </connections>
+            <point key="canvasLocation" x="131.8840579710145" y="175.44642857142856"/>
+        </tableViewCell>
+    </objects>
+</document>
