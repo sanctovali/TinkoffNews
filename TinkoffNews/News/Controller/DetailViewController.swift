@@ -8,6 +8,7 @@
 
 import UIKit
 import WebKit
+import CoreData
 
 class DetailViewController: UIViewController {
 	@IBOutlet weak var newsWebView: WKWebView!
@@ -15,22 +16,17 @@ class DetailViewController: UIViewController {
 	@IBOutlet weak var titleLabel: UILabel!
 	@IBOutlet weak var dateLabel: UILabel!
 	
-	var news: NewsEntity! {
-		didSet {
-			updateNewsData()
-		}
-	}
+	var news: NewsEntity!
 	
     override func viewDidLoad() {
-        super.viewDidLoad()
-		
+        super.viewDidLoad()		
     }
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super .viewWillAppear(animated)
 		setupUI()
+		updateNewsData()
 	}
-	
 	
 	private func updateNewsData() {
 		NetworkManager.shared.getNewsContent(urlSlug: news.urlSlug!) { (result) in
@@ -41,17 +37,27 @@ class DetailViewController: UIViewController {
 				}
 			case .error(let errorDescription):
 				AlertsManager.shared.showWarning(title: errorDescription)
+				self.loadFromCache()
 			}
 		}
 	}
 	
-	private func handleData(data: String) {
-		
-		news.text = data
-		newsWebView.loadHTMLString(data, baseURL: nil)
-		titleLabel.text = news.title!
+	private func loadFromCache() {
+		guard let cachedNews = CoreDataStack.shared.fetch(NewsEntity.self, id: self.news.id!) else { return }
+				DispatchQueue.main.async { [weak self] in
+					self?.handleData(data: cachedNews.text)
+				}
+	}
+	
+	private func handleData(data: String?) {
+		if let text = data {
+			news.text = text
+			newsWebView.loadHTMLString(text, baseURL: nil)
+			activityIndicator.stopAnimating()
+		}
+		titleLabel.text = news.title
 		dateLabel.text = handleDate(news.date!)
-		activityIndicator.stopAnimating()
+		update(content: data ?? "", for: news)
 	}
 	
 	private func handleDate(_ date: String) -> String {
@@ -64,6 +70,15 @@ class DetailViewController: UIViewController {
 		guard let newsDate = dateFormatter.date(from: dateString) else { return "" }
 			dateFormatter.dateFormat = "HH:mm MMM d, yyyy"
 			return dateFormatter.string(from: newsDate)
+	}
+	
+	private func update(content: String, for news: NewsEntity) {
+		guard let result = CoreDataStack.shared.fetch(NewsEntity.self, id: news.id!) else {
+			return
+		}
+		result.setValue(content, forKey: "text")
+		result.setValue(news.viewsCounter + 1, forKey: "viewsCounter")
+		CoreDataStack.shared.saveContext()
 	}
 	
 	@IBAction func dismissButtonTapped(_ sender: Any) {

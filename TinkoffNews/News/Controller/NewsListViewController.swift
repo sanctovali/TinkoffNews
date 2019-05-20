@@ -14,13 +14,7 @@ class NewsListViewController: UIViewController {
 	@IBOutlet weak var tableView: UITableView!
 	
 	private var currentPage = 0
-	private var news = [NewsEntity]() {
-		didSet {
-			DispatchQueue.main.async {
-				self.tableView.reloadData()
-			}
-		}
-	}
+	private var news = [NewsEntity]()
 	
 	lazy var refreshControl: UIRefreshControl = {
 		let refreshControl = UIRefreshControl()
@@ -34,6 +28,7 @@ class NewsListViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupUI()
+		updateNewsData()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -41,6 +36,7 @@ class NewsListViewController: UIViewController {
 		fetchData()
 	}
 	//MARK: Data handling
+	///Loading niews list from news service
 	private func updateNewsData() {
 		NetworkManager.shared.getNewslist(page: currentPage) { (result) in
 			switch result {
@@ -58,25 +54,18 @@ class NewsListViewController: UIViewController {
 		news = data.compactMap { NewsEntity.createNew(from: $0) }
 		CoreDataStack.shared.saveContext()
 		fetchData()
-		
 	}
-	
+	///loading data news list from local cache
 	private func fetchData() {
-		let context = CoreDataStack.shared.getContext()
-		let fetchRequest = NSFetchRequest<NewsEntity>(entityName: "NewsEntity")
-		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
-		do {
-			let result = try context.fetch(fetchRequest)
-			news = result
-			DispatchQueue.main.async {
-				self.tableView.reloadData()
-			}
-		} catch let error as NSError {
-			print("Could not fetch. \(error), \(error.userInfo)")
-			AlertsManager.shared.showWarning(title: error.localizedDescription)
+		guard let fetchedData = CoreDataStack.shared.fetchAll(NewsEntity.self) else {
+			return
+		}
+		news = fetchedData
+		DispatchQueue.main.async {
+			self.tableView.reloadData()
 		}
 	}
-	
+	///loading +20 more news from news service
 	private func getMoreNews() {
 		currentPage += 1
 		updateNewsData()
@@ -105,6 +94,7 @@ extension NewsListViewController: UITableViewDataSource {
 extension NewsListViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		performSegue(withIdentifier: "showDetail", sender: indexPath)
+		
 		tableView.deselectRow(at: indexPath, animated: false)
 	}
 	
@@ -116,10 +106,9 @@ extension NewsListViewController: UITableViewDelegate {
 			return
 		}
 		dvc.news = news[indexPath.row]
-		news[indexPath.row].viewsCounter += Int16(1)
-		fetchData()
+		tableView.reloadRows(at: [indexPath], with: .none)
 	}
-	///Pagination
+	
 	func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
 		if indexPath.row == news.count - 1 {
 			getMoreNews()

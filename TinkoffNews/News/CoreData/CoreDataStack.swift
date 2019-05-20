@@ -29,10 +29,11 @@ class CoreDataStack {
 	}
 	
 	func saveContext () {
-		let context = persistentContainer.viewContext
+		let context = getContext()
 		if context.hasChanges {
 			do {
 				try context.save()
+				print("saved")
 			} catch {
 				let nserror = error as NSError
 				fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
@@ -50,6 +51,22 @@ class CoreDataStack {
 			}
 		} catch {
 			print("Error in \(#function) at line \(#line): \(entityName) with id=\(id) not found")
+			return nil
+		}
+		return nil
+	}
+	
+	func fetchAll<T: NSManagedObject>(_ objectType: T.Type) -> [T]? {
+		let entityName = String(describing: objectType)
+		let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
+		do {
+			if let result = try getContext().fetch(fetchRequest) as? [T] {
+				return result
+			}
+		} catch let error as NSError {
+			print("Error in \(#function) at line \(#line): cant fetch any data for \(entityName)")
+			AlertsManager.shared.showWarning(title: error.localizedDescription)
 			return nil
 		}
 		return nil
